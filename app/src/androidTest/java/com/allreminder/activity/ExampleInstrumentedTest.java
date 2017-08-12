@@ -1,4 +1,4 @@
-package com.allreminder.allreminder;
+package com.allreminder.activity;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

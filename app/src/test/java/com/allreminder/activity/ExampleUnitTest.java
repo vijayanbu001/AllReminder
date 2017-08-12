@@ -1,4 +1,4 @@
-package com.allreminder.allreminder;
+package com.allreminder.activity;
 
 import org.junit.Test;
 
