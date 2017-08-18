@@ -1,8 +1,13 @@
 package com.allreminder.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +18,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewStub;
+import android.widget.Adapter;
+import android.widget.GridView;
+import android.widget.ListView;
+
+import com.allreminder.adaptor.ToolAdaptor;
+import com.allreminder.broadcastReceiver.BatteryStatusReceiver;
+import com.allreminder.listener.CustomListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    CustomListener customListener;
+    Intent batteryStatus;
+    ToolAdaptor toolAdaptor;
+    private GridView gridView;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +40,36 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ViewStub viewStub = (ViewStub) findViewById(R.id.list_stub);
-        View view = viewStub.inflate();
-        viewStub.setVisibility(View.VISIBLE);
+        context =this;
+        gridView = (GridView) findViewById(R.id.tool_grid);
+        CustomListener customListener = new CustomListener() {
+            @Override
+            public void onBatteryStatusChange(Intent intent){
+                batteryStatus = intent;
+                toolAdaptor= new ToolAdaptor(context,batteryStatus,R.layout.tool_grid_item,"item");
+                gridView.setAdapter(toolAdaptor);
+                toolAdaptor.notifyDataSetChanged();
+            }
+        };
+        BatteryStatusReceiver batteryStatusReceiver = new BatteryStatusReceiver(customListener);
+        batteryStatus=registerReceiver(batteryStatusReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+        System.out.println("Batery Level Main" + batteryStatus);
+       /* ViewStub viewStubList = (ViewStub) findViewById(R.id.list_stub);
+        View view = (View) viewStubList.inflate();
+        ListView listView = (ListView) findViewById(R.id.tool_list);
+        listView.setAdapter(new ToolAdaptor(this,R.layout.tool_list_item,"item"));
+        viewStubList.setVisibility(view.VISIBLE);
+
+
+        ViewStub viewStubGrid = (ViewStub) findViewById(R.id.grid_stub);
+        view = (View) viewStubGrid.inflate();*/
+//        GridView gridView = (GridView) findViewById(R.id.tool_grid);
+        toolAdaptor= new ToolAdaptor(this,batteryStatus,R.layout.tool_grid_item,"item");
+        gridView.setAdapter(toolAdaptor);
+        toolAdaptor.notifyDataSetChanged();
+        /*viewStubGrid.setVisibility(view.VISIBLE);*/
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,4 +145,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

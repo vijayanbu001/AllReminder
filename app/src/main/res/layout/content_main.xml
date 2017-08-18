@@ -13,17 +13,22 @@
     tools:context="com.allreminder.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-   <!-- <fragment android:id="@+id/viewFragment"
+    <include layout="@layout/tool_grid_view"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
+    <!--<fragment android:id="@+id/viewFragment"
          android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
--->
-    <ViewStub
+        android:layout_height="match_parent"
+        android:layout="@layout/tool_grid_view"
+        />-->
+  <!--  <ViewStub
         android:id="@+id/list_stub"
         android:inflatedId="@+id/list_inflate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout="@layout/tool_list_view"
         />
+
     <ViewStub
         android:id="@+id/grid_stub"
         android:inflatedId="@+id/grid_inflate"
@@ -31,4 +36,5 @@
         android:layout_height="match_parent"
         android:layout="@layout/tool_grid_view"
         />
+  -->
 </RelativeLayout>
