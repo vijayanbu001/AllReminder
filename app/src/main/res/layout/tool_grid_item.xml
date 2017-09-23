@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="100dp"
-    android:background="@color/colorPrimary"
-    android:layout_centerVertical="true"    >
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/tool_image"
-        android:layout_gravity="center"/>
+    android:layout_height="105dp"
+    android:background="@color/lightBlack"
+    android:layout_centerVertical="true"
+    android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:paddingTop="10dp"
+        android:background="@color/grey">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@mipmap/ic_launcher"
+            android:id="@+id/tool_image"
+            android:layout_gravity="center"
+            android:paddingBottom="4dp"
+            android:visibility="visible"/>
+        <AnalogClock
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+    </FrameLayout>
 
     <TextView
-        android:text="@string/TextView"
+        android:id="@+id/tool_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tool_name"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:text="@string/TextView" />
+
 </LinearLayout>

@@ -2,21 +2,15 @@ package com.allreminder.adaptor;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.widget.AnalogClock;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.allreminder.activity.MainActivity;
 import com.allreminder.activity.R;
 import com.allreminder.customanimation.BatteryStatus;
 
@@ -25,21 +19,23 @@ import com.allreminder.customanimation.BatteryStatus;
  */
 
 public class ToolAdaptor extends BaseAdapter {
+    private int[] itemImage;
     private Intent intent;
     private Context context;
-    private String item;
+    private String[] itemName;
     private int resource;
 
-    public ToolAdaptor(Context context, Intent intent, int resource, String item) {
+    public ToolAdaptor(Context context, Intent intent, int resource, String[] itemName,int[] itemImage) {
         this.context = context;
         this.intent = intent;
         this.resource = resource;
-        this.item = item;
+        this.itemName = itemName;
+        this.itemImage = itemImage;
     }
 
     @Override
     public int getCount() {
-        return 10;
+        return itemName.length;
     }
 
     @Override
@@ -58,26 +54,33 @@ public class ToolAdaptor extends BaseAdapter {
         System.out.println(layoutInflator);
         view = layoutInflator.inflate(resource, viewGroup, false);
         TextView itemName = (TextView) view.findViewById(R.id.tool_name);
-        ImageView image = (ImageView) view.findViewById(R.id.tool_image);
-        itemName.setText(this.item);
-        Bitmap bitmap = Bitmap.createBitmap(image.getWidth()+ 150,image.getHeight()+ 250, Bitmap.Config.ARGB_8888);
-        BatteryStatus batteryStatus= new BatteryStatus(this.context,this.intent,image);
+        ImageView itemImage = (ImageView) view.findViewById(R.id.tool_image);
+        AnalogClock analogClock = (AnalogClock) view.findViewById(R.id.clock);
+        itemName.setText(this.itemName[i]);
+        itemImage.setImageDrawable(this.context.getResources().getDrawable(R.drawable.alarm_clock_img));
+        if(itemName.getText().toString().equalsIgnoreCase("battery")) {
+//            itemImage.setPadding(0,0,0,0);
+            Bitmap bitmap = Bitmap.createBitmap(itemImage.getWidth() + 150, itemImage.getHeight() + 250, Bitmap.Config.ARGB_8888);
+            BatteryStatus batteryStatus = new BatteryStatus(this.context, this.intent, itemImage);
+        } else if(itemName.getText().toString().equalsIgnoreCase("alarm")){
+            itemImage.setVisibility(View.INVISIBLE);
+            analogClock.setVisibility(View.VISIBLE);
+        }
+
 //        batteryStatus.invalidate();
 //        Canvas c = new Canvas(bitmap);
 //        batteryStatus.draw(c);
 //        Canvas c = new Canvas(bitmap);
-//        image.draw(c);
+//        itemImage.draw(c);
 
 //        Paint p = new Paint();
 //        p.setColor(Color.GREEN);
 //        c.drawLine(0, 10, 10, 10, p);
-//        image.draw(c);
-       // image.setImageBitmap(batteryStatus.getBitmap());
+//        itemImage.draw(c);
+       // itemImage.setImageBitmap(batteryStatus.getBitmap());
 
-//        image.setImageBitmap(bitmap);
-//        image.setImageResource(R.drawable.ic_menu_camera);
+//        itemImage.setImageBitmap(bitmap);
+//        itemImage.setImageResource(R.drawable.ic_menu_camera);
         return view;
     }
-
-
 }

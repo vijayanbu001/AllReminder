@@ -27,11 +27,10 @@
                 </intent-filter>
             </receiver>
         </activity>
-
-        <receiver
-            android:name="com.allreminder.listener.MyReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
+        <activity android:name=".AlarmActivity"
+                   android:parentActivityName=".MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTVITY" android:value=".MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

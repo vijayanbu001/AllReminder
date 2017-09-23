@@ -1,9 +1,21 @@
 <resources>
-    <string name="app_name">Mr.Right</string>
+    <string name="app_name">Mr.Ri</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="TextView">Text</string>
+    <array name="list_content">
+        <item>Battery</item>
+        <item>Alarm</item>
+        <item>Birthday</item>
+        <item>Reminder</item>
+        <item>Contacts</item>
+    </array>
+    <array name="list_img_content">
+        <item>R.drawable.battery</item>
+        <item>R.drawable.alarm_clock_img</item>
+        <item>R.drawable.birthday</item>
+    </array>
 </resources>

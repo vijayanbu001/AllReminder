@@ -6,11 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.os.BatteryManager;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 import static android.graphics.Paint.Align.CENTER;
@@ -37,9 +41,10 @@ public class BatteryStatus extends View implements Drawable.Callback {
     private Rect batteryBlood;
     private Drawable mDrawable;
     private Canvas canvas;
-    private RectF batteryHeadRectF=new RectF();
-    private RectF batteryBloodRectF =new RectF();
+    private RectF batteryHeadRectF = new RectF();
+    private RectF batteryBloodRectF = new RectF();
     private RectF batteryBodyRectF = new RectF();
+
     public BatteryStatus(Context context, Intent intent, ImageView image) {
         super(context);
         this.context = context;
@@ -49,13 +54,11 @@ public class BatteryStatus extends View implements Drawable.Callback {
         paint = new Paint();
         this.image = image;
         this.width = 150;
-
         this.height = 250;
         batteryStatus = intent;
         this.bitmap = Bitmap.createBitmap(150, 250, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         this.draw(canvas);
-        System.out.println("inside constructor");
     }
 
     @Override
@@ -65,24 +68,20 @@ public class BatteryStatus extends View implements Drawable.Callback {
         canvas = new Canvas(bitmap);
     }
 
-    public void setDrawable(Drawable d) {
-
-    }
-
     @Override
     public void onDraw(Canvas canvas) {
         this.canvas = canvas;
         int batteryCenter = (batteryRight + batteryLeft) / 2;
         System.out.println(batteryCenter);
-        batteryHead.set(batteryCenter - 20, 20, batteryCenter + 20, 40);
+        batteryHead.set(batteryCenter - 20, 27, batteryCenter + 20, 40);
         batteryBody.set(batteryLeft, batteryTop, batteryRight, batteryBottom);
         batteryHeadRectF.set(batteryHead);
-        paint.setColor(Color.BLACK);
-        canvas.drawRoundRect(batteryHeadRectF, 5, 5, paint);
+        paint.setColor(Color.WHITE);
+        canvas.drawRoundRect(batteryHeadRectF, 3, 3, paint);
 
         int level = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) : -1;
-        int scale = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1) : -1;
-        int plugged = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1):-1;
+//        int scale = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1) : -1;
+        int plugged = batteryStatus != null ? batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) : -1;
 
 //        float batteryPct = level / (float) scale;
 
@@ -96,19 +95,27 @@ public class BatteryStatus extends View implements Drawable.Callback {
             paint.setColor(Color.GREEN);
 
         batteryBloodRectF.set(batteryBlood);
-        canvas.drawRoundRect(batteryBloodRectF, 10, 10, paint);
+//        canvas.scale(50,50,75,75);
+        canvas.drawRoundRect(batteryBloodRectF, 2, 2, paint);
+
+
 
         paint.setColor(Color.WHITE);
         paint.setStyle(Paint.Style.STROKE);
-
+        paint.setStrokeWidth(5);
         batteryBodyRectF.set(batteryBody);
         canvas.drawRoundRect(batteryBodyRectF, 10, 10, paint);
+
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setTextSize(30);
+        paint.setStrokeWidth(1);
+        paint.setTextSize(40);
         paint.setTextAlign(CENTER);
-        if (plugged > 0)
+        if (plugged > 0 ) {
             canvas.drawText(String.valueOf(level), batteryCenter, (batteryTop + batteryBottom) / 2, paint);
+        }
+
         image.setImageBitmap(getBitmap());
+
         postInvalidate();
     }
 

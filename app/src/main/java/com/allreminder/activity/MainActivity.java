@@ -14,11 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.allreminder.adaptor.ToolAdaptor;
 import com.allreminder.broadcastReceiver.BatteryStatusReceiver;
 import com.allreminder.listener.CustomListener;
+import com.allreminder.listener.GridItemClickListener;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,CustomListener {
@@ -27,7 +29,8 @@ public class MainActivity extends AppCompatActivity
     private Intent batteryStatus;
     private ToolAdaptor toolAdaptor;
     Toolbar toolbar;
-
+    String[] listArray;
+    int[] listImgArray;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +38,14 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         gridView = (GridView) findViewById(R.id.tool_grid);
+
+        listArray = getResources().getStringArray(R.array.list_content);
+
+        listImgArray = getResources().getIntArray(R.array.list_img_content);
+
         batteryStatusReceiver = new BatteryStatusReceiver(this);
         batteryStatus=registerReceiver(batteryStatusReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        toolAdaptor= new ToolAdaptor(this,batteryStatus,R.layout.tool_grid_item,"item");
-        gridView.setAdapter(toolAdaptor);
-        toolAdaptor.notifyDataSetChanged();
+        adaptorCaller();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +64,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void adaptorCaller() {
+        toolAdaptor= new ToolAdaptor(this,batteryStatus, R.layout.tool_grid_item, listArray,listImgArray);
+        gridView.setAdapter(toolAdaptor);
+        gridView.setOnItemClickListener(new GridItemClickListener(this.getApplicationContext()));
+        toolAdaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -121,8 +134,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBatteryStatusChange(Intent intent) {
         batteryStatus = intent;
-        toolAdaptor= new ToolAdaptor(this,batteryStatus,R.layout.tool_grid_item,"item");
-        gridView.setAdapter(toolAdaptor);
-        toolAdaptor.notifyDataSetChanged();
+        adaptorCaller();
     }
 }
