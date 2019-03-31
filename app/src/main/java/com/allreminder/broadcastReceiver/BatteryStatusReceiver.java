@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.allreminder.activity.R;
 import com.allreminder.adaptor.ToolAdaptor;
@@ -31,6 +33,9 @@ public class BatteryStatusReceiver extends BroadcastReceiver {
         int  temperature= intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
         int  voltage= intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);
         customListener.onBatteryStatusChange(intent);
+        BatteryManager bm = (BatteryManager) context.getSystemService(context.BATTERY_SERVICE);
+        //        if (level > 80)
+        customListener.showNotification(intent);
     }
     public BatteryStatusReceiver(CustomListener customListener){
         this.customListener = customListener;

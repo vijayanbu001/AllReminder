@@ -1,8 +1,14 @@
 package com.allreminder.activity;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -10,11 +16,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.allreminder.adaptor.ToolAdaptor;
@@ -26,11 +32,15 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,CustomListener {
     private GridView gridView;
     BatteryStatusReceiver batteryStatusReceiver;
-    private Intent batteryStatus;
+    private Intent batteryStatusIntent;
     private ToolAdaptor toolAdaptor;
     Toolbar toolbar;
     String[] listArray;
     int[] listImgArray;
+    Notification notification;
+    MediaPlayer mp;
+    String strRingtonePreference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +53,9 @@ public class MainActivity extends AppCompatActivity
 
         listImgArray = getResources().getIntArray(R.array.list_img_content);
 
+
         batteryStatusReceiver = new BatteryStatusReceiver(this);
-        batteryStatus=registerReceiver(batteryStatusReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        batteryStatusIntent =registerReceiver(batteryStatusReceiver,new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         adaptorCaller();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -66,8 +77,17 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void play(){
+
+        if(mp != null)
+            mp.start();
+        }
+
+
     private void adaptorCaller() {
-        toolAdaptor= new ToolAdaptor(this,batteryStatus, R.layout.tool_grid_item, listArray,listImgArray);
+//        System.out.println("sound uri ===>"+ sound.getPath());
+
+        toolAdaptor= new ToolAdaptor(this, batteryStatusIntent, R.layout.tool_grid_item, listArray,listImgArray);
         gridView.setAdapter(toolAdaptor);
         gridView.setOnItemClickListener(new GridItemClickListener(this.getApplicationContext()));
         toolAdaptor.notifyDataSetChanged();
@@ -81,6 +101,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        unregisterReceiver(batteryStatusReceiver);
     }
 
     @Override
@@ -130,10 +151,37 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
+        strRingtonePreference = preference.getString("notifications_new_message_ringtone", "DEFAULT_SOUND");
+        System.out.println("strRingtonePreference"+strRingtonePreference);
+//        notificationBuilder.setSound(Uri.parse(strRingtonePreference));
+        System.out.println("Uri.parse(strRingtonePreference)"+Uri.parse(strRingtonePreference));
+//        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), Uri.parse(strRingtonePreference));
+//        r.play();
+        mp = MediaPlayer.create(getApplicationContext(), Uri.parse(strRingtonePreference));
+
+    }
 
     @Override
     public void onBatteryStatusChange(Intent intent) {
-        batteryStatus = intent;
+        this.batteryStatusIntent = intent;
+
         adaptorCaller();
     }
+
+    @Override
+    public void showNotification(Intent intent) {
+
+//        PendingIntent pendingIntent =
+        int plugged = intent != null ? intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) : -1;
+        int  level= intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
+        System.out.println("plugged ===>" + plugged);
+//         if(plugged > 0 && level > 50 )
+             play();
+    }
+
 }

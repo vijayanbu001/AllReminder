@@ -12,6 +12,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
@@ -88,7 +91,9 @@ public class BatteryStatus extends View implements Drawable.Callback {
         batteryBlood.set(batteryLeft + 2, batteryBottom - (level * batteryStep) + 1, batteryRight - 1, batteryBottom - 1);
 
         if (level <= 30)
+        {
             paint.setColor(Color.RED);
+       }
         else if (level <= 50)
             paint.setColor(Color.YELLOW);
         else
@@ -121,5 +126,27 @@ public class BatteryStatus extends View implements Drawable.Callback {
 
     public Bitmap getBitmap() {
         return this.bitmap;
+    }
+
+
+
+    public Context getApplicationContext() {
+        return this.context;
+
+//        try {
+//            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+
+            // The line below will set it as a default ring tone replace
+            // RingtoneManager.TYPE_RINGTONE with RingtoneManager.TYPE_NOTIFICATION
+            // to set it as a notification tone
+//            RingtoneManager.setActualDefaultRingtoneUri(
+//                    getApplicationContext(), RingtoneManager.TYPE_RINGTONE,
+//                    notification);
+//            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+//            r.play();
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

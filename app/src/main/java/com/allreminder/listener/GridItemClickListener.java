@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.allreminder.activity.AlarmActivity;
+import com.allreminder.activity.BatterySettingsActivity;
 import com.allreminder.activity.MainActivity;
 
 /**
@@ -23,13 +24,11 @@ public class GridItemClickListener implements AdapterView.OnItemClickListener {
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         Toast.makeText(context,id+"",Toast.LENGTH_SHORT).show();
-//        view.findViewById(id)
+        Intent intent = null;
         if(id==0){
-
+            intent = new Intent(this.context, BatterySettingsActivity.class);
         }else if(id == 1){
-            Intent intent = new Intent(this.context, AlarmActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            this.context.startActivity(intent);
+            intent = new Intent(this.context, AlarmActivity.class);
         }else if(id == 2){
 
         }else if(id == 3){
@@ -37,5 +36,7 @@ public class GridItemClickListener implements AdapterView.OnItemClickListener {
         }else if(id == 4){
 
         }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.context.startActivity(intent);
     }
 }

@@ -7,5 +7,5 @@ import android.content.Intent;
 public interface CustomListener {
 
     void onBatteryStatusChange(Intent intent);
-
+    void showNotification(Intent intent);
 }

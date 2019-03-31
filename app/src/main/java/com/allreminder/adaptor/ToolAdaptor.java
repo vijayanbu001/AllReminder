@@ -62,6 +62,7 @@ public class ToolAdaptor extends BaseAdapter {
 //            itemImage.setPadding(0,0,0,0);
             Bitmap bitmap = Bitmap.createBitmap(itemImage.getWidth() + 150, itemImage.getHeight() + 250, Bitmap.Config.ARGB_8888);
             BatteryStatus batteryStatus = new BatteryStatus(this.context, this.intent, itemImage);
+
         } else if(itemName.getText().toString().equalsIgnoreCase("alarm")){
             itemImage.setVisibility(View.INVISIBLE);
             analogClock.setVisibility(View.VISIBLE);
