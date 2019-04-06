@@ -8,6 +8,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name="com.allreminder.services.MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -17,16 +22,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <receiver android:name=".BatteryStatusReceiver">
-                <intent-filter>
-                    <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                    <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-                    <action android:name="android.intent.action.ACTION_BATTERY_LOW" />
-                    <action android:name="android.intent.action.ACTION_BATTERY_OKAY" />
-                </intent-filter>
-            </receiver>
         </activity>
+
+        <receiver android:name="com.allreminder.broadcastReceiver.BatteryStatusReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.ACTION_BATTERY_LOW" />
+                <action android:name="android.intent.action.ACTION_BATTERY_OKAY" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".AlarmActivity"
             android:parentActivityName=".MainActivity">

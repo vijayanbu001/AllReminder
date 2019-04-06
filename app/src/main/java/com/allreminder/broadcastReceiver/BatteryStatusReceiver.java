@@ -22,6 +22,7 @@ public class BatteryStatusReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        System.out.println("changed...");
         int  health= intent.getIntExtra(BatteryManager.EXTRA_HEALTH,0);
         int  icon_small= intent.getIntExtra(BatteryManager.EXTRA_ICON_SMALL,0);
         int  level= intent.getIntExtra(BatteryManager.EXTRA_LEVEL,0);
@@ -38,6 +39,9 @@ public class BatteryStatusReceiver extends BroadcastReceiver {
         customListener.showNotification(intent);
     }
     public BatteryStatusReceiver(CustomListener customListener){
+//        this();
         this.customListener = customListener;
+    }
+    public BatteryStatusReceiver(){
     }
 }
